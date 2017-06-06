@@ -12,7 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,20 +31,54 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rvRecyclerView;
-    private MoviesAdapter maAdapter;
+    private MovieAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        maAdapter = new MoviesAdapter(this);
-        rvRecyclerView.setAdapter(maAdapter);
-        getPopularMovies();
+        mAdapter = new MovieAdapter(this);
+        rvRecyclerView.setAdapter(mAdapter);
+        //getPopularMovies();
+
+        Spinner spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
+
+        String[] strOptions = new String[] { "Top Rated Movies", "Upcoming Movies", "Now Playing",
+                "Popular Movies", "Popular TV Shows", "Top Rated TV Shows"};
+
+        ArrayAdapter<String> arAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_spinner_dropdown_item, strOptions);
+
+        spnMenuOptions.setAdapter(arAdapter);
+
+        spnMenuOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                switch ((String)parent.getItemAtPosition(position)) {
+                    case "Top Rated Movies":
+                        //getTopRatedMovies();
+                    case "Upcoming Movies":
+                        //getUpcomingMovies();
+                    case "Now Playing":
+                        //getNowPlayingMovies();
+                    case "Popular Movies":
+                        //getPopularMovies();
+                    case "Popular TV Shows":
+                        //getPopularTVShows();
+                    case "Top Rated TV Shows":
+                        //getTopRatedTVShows();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
     }
 
     private void getPopularMovies() {
@@ -48,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 .setEndpoint("http://api.themoviedb.org/3")
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
-                    public void intercept(RequestFacade request) {
-                        request.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -58,7 +96,132 @@ public class MainActivity extends AppCompatActivity {
         mtaService.getPopularMovies(new Callback<Movie.MovieResult>() {
             @Override
             public void success(Movie.MovieResult movieResult, Response response) {
-                maAdapter.setMovieList(movieResult.getResults());
+                mAdapter.setMovieList(movieResult.getResults());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void getTopRatedMovies() {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        mtaService.getTopRatedMovies(new Callback<Movie.MovieResult>() {
+            @Override
+            public void success(Movie.MovieResult movieResult, Response response) {
+                mAdapter.setMovieList(movieResult.getResults());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void getNowPlayingMovies() {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        mtaService.getNowPlayingMovies(new Callback<Movie.MovieResult>() {
+            @Override
+            public void success(Movie.MovieResult movieResult, Response response) {
+                mAdapter.setMovieList(movieResult.getResults());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void getUpcomingMovies() {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        mtaService.getUpcomingMovies(new Callback<Movie.MovieResult>() {
+            @Override
+            public void success(Movie.MovieResult movieResult, Response response) {
+                mAdapter.setMovieList(movieResult.getResults());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void getPopularTVShows() {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        mtaService.getPopularTVShows(new Callback<Movie.MovieResult>() {
+            @Override
+            public void success(Movie.MovieResult movieResult, Response response) {
+                mAdapter.setMovieList(movieResult.getResults());
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                error.printStackTrace();
+            }
+        });
+    }
+
+    private void getTopRatedTVShows() {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade rfRequest) {
+                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        mtaService.getTopRatedTVShows(new Callback<Movie.MovieResult>() {
+            @Override
+            public void success(Movie.MovieResult movieResult, Response response) {
+                mAdapter.setMovieList(movieResult.getResults());
             }
 
             @Override
@@ -76,39 +239,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class MoviesAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    public static class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         private List<Movie> mMovieList;
-        private LayoutInflater mInflater;
-        private Context mContext;
+        private LayoutInflater liInflater;
+        private Context conContext;
 
-        public MoviesAdapter(Context context) {
-            this.mContext = context;
-            this.mInflater = LayoutInflater.from(context);
+        public MovieAdapter(Context conC) {
+            this.conContext = conC;
+            this.liInflater = LayoutInflater.from(conC);
         }
 
         @Override
-        public MovieViewHolder onCreateViewHolder(ViewGroup parent, int nViewType) {
-            View vView = mInflater.inflate(R.layout.movie_list, parent, false);
-            final MovieViewHolder mvhViewHolder = new MovieViewHolder(vView);
+        public MovieViewHolder onCreateViewHolder(ViewGroup vgParent, final int nViewType) {
+            View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
+            final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
             vView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View vView) {
-                    int nPosition = mvhViewHolder.getAdapterPosition();
-                    Intent intI = new Intent(mContext, MovieDetailActivity.class);
-                    intI.putExtra(MovieDetailActivity.EXTRA_MOVIE, mMovieList.get(nPosition));
-                    mContext.startActivity(intI);
+                public void onClick(View vV) {
+                    int nPos = mvhHolder.getAdapterPosition();
+                    Intent intI = new Intent(conContext, MovieDetailActivity.class);
+                    intI.putExtra(MovieDetailActivity.EXTRA_MOVIE, mMovieList.get(nPos));
+                    conContext.startActivity(intI);
                 }
             });
-           return mvhViewHolder;
+            return mvhHolder;
         }
 
         @Override
-        public void onBindViewHolder(MovieViewHolder holder, int position) {
-            Movie movie = mMovieList.get(position);
-            Picasso.with(mContext)
-                    .load(movie.getPoster())
+        public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
+            Movie mM = mMovieList.get(nP);
+            Picasso.with(conContext)
+                    .load(mM.getPoster())
                     .placeholder(R.color.colorAccent)
-                    .into(holder.ivImageView);
+                    .into(mvhH.ivImageView);
         }
 
         @Override
@@ -116,9 +279,9 @@ public class MainActivity extends AppCompatActivity {
             return (mMovieList == null) ? 0 : mMovieList.size();
         }
 
-        public void setMovieList(List<Movie> mMovieList) {
+        public void setMovieList(List<Movie> ml) {
             this.mMovieList = new ArrayList<Movie>();
-            this.mMovieList.addAll(mMovieList);
+            this.mMovieList.addAll(ml);
             notifyDataSetChanged();
         }
     }
