@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         public MovieViewHolder onCreateViewHolder(ViewGroup parent, int nViewType) {
             View vView = mInflater.inflate(R.layout.movie_list, parent, false);
             final MovieViewHolder mvhViewHolder = new MovieViewHolder(vView);
-/*          vView.setOnClickListener(new View.OnClickListener() {
+            vView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View vView) {
                     int nPosition = mvhViewHolder.getAdapterPosition();
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     mContext.startActivity(intI);
                 }
             });
-*/         return mvhViewHolder;
+           return mvhViewHolder;
         }
 
         @Override
