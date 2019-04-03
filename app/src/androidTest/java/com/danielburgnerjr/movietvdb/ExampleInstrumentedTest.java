@@ -1,4 +1,4 @@
-package com.dburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.dburgnerjr.movietvdb", appContext.getPackageName());
+        assertEquals("com.danielburgnerjr.movietvdb", appContext.getPackageName());
     }
 }

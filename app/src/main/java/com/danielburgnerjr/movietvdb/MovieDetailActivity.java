@@ -1,4 +1,4 @@
-package com.dburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;

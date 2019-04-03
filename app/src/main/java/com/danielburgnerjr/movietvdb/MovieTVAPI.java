@@ -1,4 +1,4 @@
-package com.dburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb;
 
 import retrofit.Callback;
 import retrofit.http.GET;

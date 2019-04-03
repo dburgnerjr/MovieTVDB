@@ -1,4 +1,4 @@
-package com.dburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.dburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb;
 
 /**
  * Created by dburgnerjr on 6/5/17.
@@ -13,6 +13,7 @@ import java.util.List;
 public class Movie implements Parcelable {
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
+    @SerializedName("title")
     private String strTitle;
 
     @SerializedName("poster_path")
@@ -87,6 +88,7 @@ public class Movie implements Parcelable {
     }
 
     public static class MovieResult {
+        @SerializedName("results")
         private List<Movie> mResults;
 
         public List<Movie> getResults() {
