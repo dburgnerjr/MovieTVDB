@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
+        rvRecyclerView.setHasFixedSize(true);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
         mAdapter = new MovieAdapter(this);
         rvRecyclerView.setAdapter(mAdapter);
         //getPopularMovies();
@@ -60,17 +62,23 @@ public class MainActivity extends AppCompatActivity {
                                        int position, long id) {
                 switch ((String)parent.getItemAtPosition(position)) {
                     case "Top Rated Movies":
-                        //getTopRatedMovies();
+                        getTopRatedMovies();
+                        break;
                     case "Upcoming Movies":
-                        //getUpcomingMovies();
+                        getUpcomingMovies();
+                        break;
                     case "Now Playing":
-                        //getNowPlayingMovies();
+                        getNowPlayingMovies();
+                        break;
                     case "Popular Movies":
-                        //getPopularMovies();
+                        getPopularMovies();
+                        break;
                     case "Popular TV Shows":
-                        //getPopularTVShows();
+                        getPopularTVShows();
+                        break;
                     case "Top Rated TV Shows":
-                        //getTopRatedTVShows();
+                        getTopRatedTVShows();
+                        break;
                 }
             }
 
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -112,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -137,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -162,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -187,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)
@@ -212,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", "8a6f42fe5f7efc6139cda365db5c89a1");
+                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
                     }
                 })
                 .setLogLevel(RestAdapter.LogLevel.FULL)

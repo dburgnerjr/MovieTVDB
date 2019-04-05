@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MovieTVDB</string>
     <string name="action_settings">Settings</string>
+    <string name="api_key">8a6f42fe5f7efc6139cda365db5c89a1</string>
 </resources>
