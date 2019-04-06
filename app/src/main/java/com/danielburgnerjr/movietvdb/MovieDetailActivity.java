@@ -1,10 +1,12 @@
 package com.danielburgnerjr.movietvdb;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -18,8 +20,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private Movie mMovie;
     ImageView ivBackdrop;
     ImageView ivPoster;
-    TextView tvTitle;
     TextView tvDescription;
+    TextView tvReleaseDate;
+    RatingBar rbRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +38,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         setSupportActionBar(tbToolbar);
         CollapsingToolbarLayout ctlToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         ctlToolbarLayout.setTitle(mMovie.getTitle());
+        ctlToolbarLayout.setExpandedTitleColor(Color.WHITE);
+        ctlToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
         ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
-        tvTitle = (TextView) findViewById(R.id.movie_title);
         tvDescription = (TextView) findViewById(R.id.movie_description);
         ivPoster = (ImageView) findViewById(R.id.movie_poster);
+        tvReleaseDate = (TextView) findViewById(R.id.release_date);
+        rbRating = (RatingBar) findViewById(R.id.rating);
 
-        tvTitle.setText(mMovie.getTitle());
         tvDescription.setText(mMovie.getDescription());
+        tvReleaseDate.setText(mMovie.getReleaseDate());
+        rbRating.setRating((float)mMovie.getUserRating());
+
         Picasso.with(this)
                 .load(mMovie.getPoster())
                 .into(ivPoster);

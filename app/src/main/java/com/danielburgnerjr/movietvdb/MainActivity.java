@@ -44,15 +44,15 @@ public class MainActivity extends AppCompatActivity {
         rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
         mAdapter = new MovieAdapter(this);
         rvRecyclerView.setAdapter(mAdapter);
-        //getPopularMovies();
+        getPopularMovies();
 
         Spinner spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
 
-        String[] strOptions = new String[] { "Top Rated Movies", "Upcoming Movies", "Now Playing",
-                "Popular Movies", "Popular TV Shows", "Top Rated TV Shows"};
+        String[] strOptions = new String[] { "Popular Movies", "Now Playing", "Top Rated Movies",
+                "Upcoming Movies", "Popular TV Shows", "Top Rated TV Shows"};
 
         ArrayAdapter<String> arAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_dropdown_item, strOptions);
+                (this, R.layout.spinner_item, strOptions);
 
         spnMenuOptions.setAdapter(arAdapter);
 
