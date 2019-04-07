@@ -31,7 +31,8 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rvRecyclerView;
-    private MovieAdapter mAdapter;
+    private MovieAdapter mMovieAdapter;
+    private TVAdapter mTVAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,9 @@ public class MainActivity extends AppCompatActivity {
         rvRecyclerView.setHasFixedSize(true);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
-        mAdapter = new MovieAdapter(this);
-        rvRecyclerView.setAdapter(mAdapter);
+        mMovieAdapter = new MovieAdapter(this);
+        mTVAdapter = new TVAdapter(this);
+        rvRecyclerView.setAdapter(mMovieAdapter);
         getPopularMovies();
 
         Spinner spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
@@ -62,21 +64,27 @@ public class MainActivity extends AppCompatActivity {
                                        int position, long id) {
                 switch ((String)parent.getItemAtPosition(position)) {
                     case "Top Rated Movies":
+                        rvRecyclerView.setAdapter(mMovieAdapter);
                         getTopRatedMovies();
                         break;
                     case "Upcoming Movies":
+                        rvRecyclerView.setAdapter(mMovieAdapter);
                         getUpcomingMovies();
                         break;
                     case "Now Playing":
+                        rvRecyclerView.setAdapter(mMovieAdapter);
                         getNowPlayingMovies();
                         break;
                     case "Popular Movies":
+                        rvRecyclerView.setAdapter(mMovieAdapter);
                         getPopularMovies();
                         break;
                     case "Popular TV Shows":
+                        rvRecyclerView.setAdapter(mTVAdapter);
                         getPopularTVShows();
                         break;
                     case "Top Rated TV Shows":
+                        rvRecyclerView.setAdapter(mTVAdapter);
                         getTopRatedTVShows();
                         break;
                 }
@@ -104,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         mtaService.getPopularMovies(new Callback<Movie.MovieResult>() {
             @Override
             public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+                mMovieAdapter.setMovieList(movieResult.getResults());
             }
 
             @Override
@@ -129,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         mtaService.getTopRatedMovies(new Callback<Movie.MovieResult>() {
             @Override
             public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+                mMovieAdapter.setMovieList(movieResult.getResults());
             }
 
             @Override
@@ -154,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         mtaService.getNowPlayingMovies(new Callback<Movie.MovieResult>() {
             @Override
             public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+                mMovieAdapter.setMovieList(movieResult.getResults());
             }
 
             @Override
@@ -179,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         mtaService.getUpcomingMovies(new Callback<Movie.MovieResult>() {
             @Override
             public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+                mMovieAdapter.setMovieList(movieResult.getResults());
             }
 
             @Override
@@ -201,10 +209,10 @@ public class MainActivity extends AppCompatActivity {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
-        mtaService.getPopularTVShows(new Callback<Movie.MovieResult>() {
+        mtaService.getPopularTVShows(new Callback<TV.TVResult>() {
             @Override
-            public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+            public void success(TV.TVResult tvResult, Response response) {
+                mTVAdapter.setTVList(tvResult.getResults());
             }
 
             @Override
@@ -226,10 +234,10 @@ public class MainActivity extends AppCompatActivity {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
-        mtaService.getTopRatedTVShows(new Callback<Movie.MovieResult>() {
+        mtaService.getTopRatedTVShows(new Callback<TV.TVResult>() {
             @Override
-            public void success(Movie.MovieResult movieResult, Response response) {
-                mAdapter.setMovieList(movieResult.getResults());
+            public void success(TV.TVResult tvResult, Response response) {
+                mTVAdapter.setTVList(tvResult.getResults());
             }
 
             @Override
@@ -293,4 +301,52 @@ public class MainActivity extends AppCompatActivity {
             notifyDataSetChanged();
         }
     }
+
+    public static class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+        private List<TV> mTVList;
+        private LayoutInflater liInflater;
+        private Context conContext;
+
+        public TVAdapter(Context conC) {
+            this.conContext = conC;
+            this.liInflater = LayoutInflater.from(conC);
+        }
+
+        @Override
+        public MovieViewHolder onCreateViewHolder(ViewGroup vgParent, final int nViewType) {
+            View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
+            final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
+            vView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View vV) {
+                    int nPos = mvhHolder.getAdapterPosition();
+                    Intent intI = new Intent(conContext, MovieDetailActivity.class);
+                    intI.putExtra(MovieDetailActivity.EXTRA_TV, mTVList.get(nPos));
+                    conContext.startActivity(intI);
+                }
+            });
+            return mvhHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
+            TV tT = mTVList.get(nP);
+            Picasso.with(conContext)
+                    .load(tT.getPoster())
+                    .placeholder(R.color.colorAccent)
+                    .into(mvhH.ivImageView);
+        }
+
+        @Override
+        public int getItemCount() {
+            return (mTVList == null) ? 0 : mTVList.size();
+        }
+
+        public void setTVList(List<TV> tl) {
+            this.mTVList = new ArrayList<TV>();
+            this.mTVList.addAll(tl);
+            notifyDataSetChanged();
+        }
+    }
+
 }

@@ -16,11 +16,14 @@ import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {
     public static final String EXTRA_MOVIE = "movie";
+    public static final String EXTRA_TV = "tv";
 
     private Movie mMovie;
+    private TV tTV;
     ImageView ivBackdrop;
     ImageView ivPoster;
     TextView tvDescription;
+    TextView tvReleaseDateHeading;
     TextView tvReleaseDate;
     RatingBar rbRating;
 
@@ -30,33 +33,55 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE);
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            tTV = getIntent().getParcelableExtra(EXTRA_TV);
         } else {
-            throw new IllegalArgumentException("Detail activity must receive a movie parcelable");
+            throw new IllegalArgumentException("Detail activity must receive a movie or TV parcelable");
         }
 
         Toolbar tbToolbar = (Toolbar) findViewById(R.id.tbToolbar);
         setSupportActionBar(tbToolbar);
         CollapsingToolbarLayout ctlToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
-        ctlToolbarLayout.setTitle(mMovie.getTitle());
+        if (getIntent().hasExtra(EXTRA_MOVIE)) {
+            ctlToolbarLayout.setTitle(mMovie.getTitle());
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            ctlToolbarLayout.setTitle(tTV.getTitle());
+        }
         ctlToolbarLayout.setExpandedTitleColor(Color.WHITE);
         ctlToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
         ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
         tvDescription = (TextView) findViewById(R.id.movie_description);
         ivPoster = (ImageView) findViewById(R.id.movie_poster);
+        tvReleaseDateHeading = (TextView) findViewById(R.id.release_date_heading);
         tvReleaseDate = (TextView) findViewById(R.id.release_date);
         rbRating = (RatingBar) findViewById(R.id.rating);
 
-        tvDescription.setText(mMovie.getDescription());
-        tvReleaseDate.setText(mMovie.getReleaseDate());
-        rbRating.setRating((float)mMovie.getUserRating());
 
-        Picasso.with(this)
-                .load(mMovie.getPoster())
-                .into(ivPoster);
-        Picasso.with(this)
-                .load(mMovie.getBackdrop())
-                .into(ivBackdrop);
+        if (getIntent().hasExtra(EXTRA_MOVIE)) {
+            tvDescription.setText(mMovie.getDescription());
+            tvReleaseDateHeading.setText("Release Date");
+            tvReleaseDate.setText(mMovie.getReleaseDate());
+            rbRating.setRating((float)mMovie.getUserRating());
 
+            Picasso.with(this)
+                    .load(mMovie.getPoster())
+                    .into(ivPoster);
+            Picasso.with(this)
+                    .load(mMovie.getBackdrop())
+                    .into(ivBackdrop);
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            tvDescription.setText(tTV.getDescription());
+            tvReleaseDateHeading.setText("First Air Date");
+            tvReleaseDate.setText(tTV.getReleaseDate());
+            rbRating.setRating((float)tTV.getUserRating());
+
+            Picasso.with(this)
+                    .load(tTV.getPoster())
+                    .into(ivPoster);
+            Picasso.with(this)
+                    .load(tTV.getBackdrop())
+                    .into(ivBackdrop);
+        }
     }
 }
