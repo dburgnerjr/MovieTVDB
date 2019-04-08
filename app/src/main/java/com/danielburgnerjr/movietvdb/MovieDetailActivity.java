@@ -6,8 +6,12 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 import com.squareup.picasso.Picasso;
 /**
@@ -20,15 +24,27 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private Movie mMovie;
     private TV tTV;
+    @InjectView(R.id.ivBackdrop)
     ImageView ivBackdrop;
+    @InjectView(R.id.movie_poster)
     ImageView ivPoster;
+    @InjectView(R.id.movie_description)
     TextView tvDescription;
+    @InjectView(R.id.release_date_heading)
     TextView tvReleaseDateHeading;
+    @InjectView(R.id.release_date)
     TextView tvReleaseDate;
+    @InjectView(R.id.rating)
     RatingBar rbRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String strDescription = null;
+        String strReleaseDate = null;
+        double dUserRating = 0.0;
+        String strPoster = null;
+        String strBackdrop = null;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
@@ -50,38 +66,34 @@ public class MovieDetailActivity extends AppCompatActivity {
         ctlToolbarLayout.setExpandedTitleColor(Color.WHITE);
         ctlToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
-        ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
-        tvDescription = (TextView) findViewById(R.id.movie_description);
-        ivPoster = (ImageView) findViewById(R.id.movie_poster);
-        tvReleaseDateHeading = (TextView) findViewById(R.id.release_date_heading);
-        tvReleaseDate = (TextView) findViewById(R.id.release_date);
-        rbRating = (RatingBar) findViewById(R.id.rating);
-
+        ButterKnife.inject(this);
 
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
-            tvDescription.setText(mMovie.getDescription());
+            strDescription = mMovie.getDescription();
             tvReleaseDateHeading.setText("Release Date");
-            tvReleaseDate.setText(mMovie.getReleaseDate());
-            rbRating.setRating((float)mMovie.getUserRating());
-
-            Picasso.with(this)
-                    .load(mMovie.getPoster())
-                    .into(ivPoster);
-            Picasso.with(this)
-                    .load(mMovie.getBackdrop())
-                    .into(ivBackdrop);
+            strReleaseDate = mMovie.getReleaseDate();
+            dUserRating = mMovie.getUserRating();
+            strPoster = mMovie.getPoster();
+            strBackdrop = mMovie.getBackdrop();
         } else if (getIntent().hasExtra(EXTRA_TV)) {
-            tvDescription.setText(tTV.getDescription());
+            strDescription = tTV.getDescription();
             tvReleaseDateHeading.setText("First Air Date");
-            tvReleaseDate.setText(tTV.getReleaseDate());
-            rbRating.setRating((float)tTV.getUserRating());
-
-            Picasso.with(this)
-                    .load(tTV.getPoster())
-                    .into(ivPoster);
-            Picasso.with(this)
-                    .load(tTV.getBackdrop())
-                    .into(ivBackdrop);
+            strReleaseDate = tTV.getReleaseDate();
+            dUserRating = tTV.getUserRating();
+            strPoster = tTV.getPoster();
+            strBackdrop = tTV.getBackdrop();
         }
+
+        tvDescription.setText(strDescription);
+        tvReleaseDate.setText(strReleaseDate);
+        rbRating.setRating((float)dUserRating);
+
+        Picasso.with(this)
+                .load(strPoster)
+                .into(ivPoster);
+        Picasso.with(this)
+                .load(strBackdrop)
+                .into(ivBackdrop);
+
     }
 }

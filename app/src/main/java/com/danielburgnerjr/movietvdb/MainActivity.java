@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,7 +33,10 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView rvRecyclerView;
+    @InjectView(R.id.rvRecyclerView)
+    RecyclerView rvRecyclerView;
+    @InjectView(R.id.spnMenuOptions)
+    Spinner spnMenuOptions;
     private MovieAdapter mMovieAdapter;
     private TVAdapter mTVAdapter;
 
@@ -39,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
+        ButterKnife.inject(this);
         rvRecyclerView.setHasFixedSize(true);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
@@ -47,8 +53,6 @@ public class MainActivity extends AppCompatActivity {
         mTVAdapter = new TVAdapter(this);
         rvRecyclerView.setAdapter(mMovieAdapter);
         getPopularMovies();
-
-        Spinner spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
 
         String[] strOptions = new String[] { "Popular Movies", "Now Playing", "Top Rated Movies",
                 "Upcoming Movies", "Popular TV Shows", "Top Rated TV Shows"};
@@ -246,107 +250,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
-        public ImageView ivImageView;
-        public MovieViewHolder(View vItemView) {
-            super(vItemView);
-            ivImageView = (ImageView) vItemView.findViewById(R.id.ivImageView);
-        }
-    }
-
-    public static class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-        private List<Movie> mMovieList;
-        private LayoutInflater liInflater;
-        private Context conContext;
-
-        public MovieAdapter(Context conC) {
-            this.conContext = conC;
-            this.liInflater = LayoutInflater.from(conC);
-        }
-
-        @Override
-        public MovieViewHolder onCreateViewHolder(ViewGroup vgParent, final int nViewType) {
-            View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
-            final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
-            vView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View vV) {
-                    int nPos = mvhHolder.getAdapterPosition();
-                    Intent intI = new Intent(conContext, MovieDetailActivity.class);
-                    intI.putExtra(MovieDetailActivity.EXTRA_MOVIE, mMovieList.get(nPos));
-                    conContext.startActivity(intI);
-                }
-            });
-            return mvhHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
-            Movie mM = mMovieList.get(nP);
-            Picasso.with(conContext)
-                    .load(mM.getPoster())
-                    .placeholder(R.color.colorAccent)
-                    .into(mvhH.ivImageView);
-        }
-
-        @Override
-        public int getItemCount() {
-            return (mMovieList == null) ? 0 : mMovieList.size();
-        }
-
-        public void setMovieList(List<Movie> ml) {
-            this.mMovieList = new ArrayList<Movie>();
-            this.mMovieList.addAll(ml);
-            notifyDataSetChanged();
-        }
-    }
-
-    public static class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-        private List<TV> mTVList;
-        private LayoutInflater liInflater;
-        private Context conContext;
-
-        public TVAdapter(Context conC) {
-            this.conContext = conC;
-            this.liInflater = LayoutInflater.from(conC);
-        }
-
-        @Override
-        public MovieViewHolder onCreateViewHolder(ViewGroup vgParent, final int nViewType) {
-            View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
-            final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
-            vView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View vV) {
-                    int nPos = mvhHolder.getAdapterPosition();
-                    Intent intI = new Intent(conContext, MovieDetailActivity.class);
-                    intI.putExtra(MovieDetailActivity.EXTRA_TV, mTVList.get(nPos));
-                    conContext.startActivity(intI);
-                }
-            });
-            return mvhHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
-            TV tT = mTVList.get(nP);
-            Picasso.with(conContext)
-                    .load(tT.getPoster())
-                    .placeholder(R.color.colorAccent)
-                    .into(mvhH.ivImageView);
-        }
-
-        @Override
-        public int getItemCount() {
-            return (mTVList == null) ? 0 : mTVList.size();
-        }
-
-        public void setTVList(List<TV> tl) {
-            this.mTVList = new ArrayList<TV>();
-            this.mTVList.addAll(tl);
-            notifyDataSetChanged();
-        }
-    }
-
 }

@@ -10,6 +10,9 @@ import java.util.List;
 public class TV implements Parcelable {
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
+    @SerializedName("id")
+    private String strId;
+
     @SerializedName("name")
     private String strTitle;
 
@@ -31,6 +34,7 @@ public class TV implements Parcelable {
     public TV() {}
 
     protected TV(Parcel in) {
+        strId = in.readString();
         strTitle = in.readString();
         strPoster = in.readString();
         strDescription = in.readString();
@@ -46,6 +50,14 @@ public class TV implements Parcelable {
         @Override
         public TV[] newArray(int nSize) { return new TV[nSize]; }
     };
+
+    public String getId() {
+        return strId;
+    }
+
+    public void setId(String strI) {
+        this.strId = strI;
+    }
 
     public String getTitle() {
         return strTitle;
@@ -102,6 +114,7 @@ public class TV implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parP, int nI) {
+        parP.writeString(strId);
         parP.writeString(strTitle);
         parP.writeString(strPoster);
         parP.writeString(strDescription);

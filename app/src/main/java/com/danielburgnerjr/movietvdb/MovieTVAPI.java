@@ -19,11 +19,23 @@ public interface MovieTVAPI {
     @GET("/movie/upcoming")
     void getUpcomingMovies(Callback<Movie.MovieResult> cb);
 
+    @GET("/movie/{id}/videos")
+    void getMovieVideos(Callback<Movie.MovieResult> cb);
+
+    @GET("/movie/{id}/reviews")
+    void getMovieReviews(Callback<Movie.MovieResult> cb);
+
     @GET("/tv/popular")
     void getPopularTVShows(Callback<TV.TVResult> cb);
 
     @GET("/tv/top_rated")
     void getTopRatedTVShows(Callback<TV.TVResult> cb);
+
+    @GET("/tv/{id}/videos")
+    void getTVVideos(Callback<TV.TVResult> cb);
+
+    @GET("/tv/{id}/reviews")
+    void getTVReviews(Callback<TV.TVResult> cb);
 
     @GET("/search/movie")
     void getSearchMovie(Callback<Movie.MovieResult> cb);
