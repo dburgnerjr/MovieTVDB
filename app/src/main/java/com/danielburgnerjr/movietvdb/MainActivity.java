@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,9 +32,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
-    @InjectView(R.id.rvRecyclerView)
     RecyclerView rvRecyclerView;
-    @InjectView(R.id.spnMenuOptions)
     Spinner spnMenuOptions;
     private MovieAdapter mMovieAdapter;
     private TVAdapter mTVAdapter;
@@ -44,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
+        spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         rvRecyclerView.setHasFixedSize(true);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);

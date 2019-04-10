@@ -41,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     @Override
     public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
         Movie mM = mMovieList.get(nP);
-        Picasso.with(conContext)
+        Picasso.get()
                 .load(mM.getPoster())
                 .placeholder(R.color.colorAccent)
                 .into(mvhH.ivImageView);

@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 import com.squareup.picasso.Picasso;
 /**
@@ -24,17 +23,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private Movie mMovie;
     private TV tTV;
-    @InjectView(R.id.ivBackdrop)
     ImageView ivBackdrop;
-    @InjectView(R.id.movie_poster)
     ImageView ivPoster;
-    @InjectView(R.id.movie_description)
     TextView tvDescription;
-    @InjectView(R.id.release_date_heading)
     TextView tvReleaseDateHeading;
-    @InjectView(R.id.release_date)
     TextView tvReleaseDate;
-    @InjectView(R.id.rating)
     RatingBar rbRating;
 
     @Override
@@ -47,6 +40,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
+        ivPoster = (ImageView) findViewById(R.id.movie_poster);
+        tvDescription = (TextView) findViewById(R.id.movie_description);
+        tvReleaseDateHeading = (TextView) findViewById(R.id.release_date_heading);
+        tvReleaseDate = (TextView) findViewById(R.id.release_date);
+        rbRating = (RatingBar) findViewById(R.id.rating);
+
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE);
         } else if (getIntent().hasExtra(EXTRA_TV)) {
@@ -66,7 +66,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         ctlToolbarLayout.setExpandedTitleColor(Color.WHITE);
         ctlToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             strDescription = mMovie.getDescription();
@@ -88,10 +88,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvReleaseDate.setText(strReleaseDate);
         rbRating.setRating((float)dUserRating);
 
-        Picasso.with(this)
+        Picasso.get()
                 .load(strPoster)
                 .into(ivPoster);
-        Picasso.with(this)
+        Picasso.get()
                 .load(strBackdrop)
                 .into(ivBackdrop);
 
