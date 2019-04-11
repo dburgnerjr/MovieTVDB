@@ -2,7 +2,7 @@ package com.danielburgnerjr.movietvdb;
 
 import retrofit.Callback;
 import retrofit.http.GET;
-
+import retrofit.http.Path;
 /**
  * Created by dburgnerjr on 6/5/17.
  */
@@ -20,7 +20,7 @@ public interface MovieTVAPI {
     void getUpcomingMovies(Callback<Movie.MovieResult> cb);
 
     @GET("/movie/{id}/videos")
-    void getMovieVideos(Callback<Movie.MovieResult> cb);
+    void getMovieVideos(@Path("id") long movieId, Callback<Video.VideoResult> cb);
 
     @GET("/movie/{id}/reviews")
     void getMovieReviews(Callback<Movie.MovieResult> cb);
@@ -32,7 +32,7 @@ public interface MovieTVAPI {
     void getTopRatedTVShows(Callback<TV.TVResult> cb);
 
     @GET("/tv/{id}/videos")
-    void getTVVideos(Callback<TV.TVResult> cb);
+    void getTVVideos(@Path("id") long tvId, Callback<Video.VideoResult> cb);
 
     @GET("/tv/{id}/reviews")
     void getTVReviews(Callback<TV.TVResult> cb);
