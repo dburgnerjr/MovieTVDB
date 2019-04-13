@@ -43,7 +43,8 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         TV tT = mTVList.get(nP);
         Picasso.get()
                 .load(tT.getPoster())
-                .placeholder(R.color.colorAccent)
+                .placeholder(R.drawable.placeholder)   // optional
+                .error(R.drawable.error)
                 .into(mvhH.ivImageView);
     }
 

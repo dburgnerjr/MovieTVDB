@@ -43,7 +43,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         Movie mM = mMovieList.get(nP);
         Picasso.get()
                 .load(mM.getPoster())
-                .placeholder(R.color.colorAccent)
+                .placeholder(R.drawable.placeholder)   // optional
+                .error(R.drawable.error)
                 .into(mvhH.ivImageView);
     }
 

@@ -90,6 +90,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 tools:listitem="@layout/videos_list" />
+            <TextView
+                android:id="@+id/reviews_heading"
+                android:layout_width="170dp"
+                android:layout_height="25dp"
+                android:padding="4dp"
+                android:text="@string/reviews_title"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reviews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/reviews_list" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

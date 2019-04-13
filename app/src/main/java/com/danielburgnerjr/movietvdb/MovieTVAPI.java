@@ -23,7 +23,7 @@ public interface MovieTVAPI {
     void getMovieVideos(@Path("id") long movieId, Callback<Video.VideoResult> cb);
 
     @GET("/movie/{id}/reviews")
-    void getMovieReviews(Callback<Movie.MovieResult> cb);
+    void getMovieReviews(@Path("id") long movieId, Callback<Review.ReviewResult> cb);
 
     @GET("/tv/popular")
     void getPopularTVShows(Callback<TV.TVResult> cb);
@@ -35,7 +35,7 @@ public interface MovieTVAPI {
     void getTVVideos(@Path("id") long tvId, Callback<Video.VideoResult> cb);
 
     @GET("/tv/{id}/reviews")
-    void getTVReviews(Callback<TV.TVResult> cb);
+    void getTVReviews(@Path("id") long tvId, Callback<Review.ReviewResult> cb);
 
     @GET("/search/movie")
     void getSearchMovie(Callback<Movie.MovieResult> cb);

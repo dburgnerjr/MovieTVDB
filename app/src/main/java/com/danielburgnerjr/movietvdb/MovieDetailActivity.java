@@ -39,14 +39,18 @@ import com.squareup.picasso.Picasso;
  * Created by dburgnerjr on 6/5/17.
  */
 
-public class MovieDetailActivity extends AppCompatActivity implements VideoAdapter.Callbacks {
+public class MovieDetailActivity extends AppCompatActivity implements VideoAdapter.Callbacks, ReviewAdapter.Callbacks {
     public static final String EXTRA_MOVIE = "movie";
     public static final String EXTRA_TV = "tv";
     public static final String EXTRA_VIDEOS = "video";
+    public static final String EXTRA_REVIEWS = "review";
+    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
     private Movie mMovie;
     private TV tTV;
     private VideoAdapter mVideoAdapter;
+    private ReviewAdapter mReviewAdapter;
+
     ImageView ivBackdrop;
     ImageView ivPoster;
     TextView tvDescription;
@@ -55,6 +59,8 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     RatingBar rbRating;
     TextView tvVideosHeading;
     RecyclerView rvVideoList;
+    TextView tvReviewsHeading;
+    RecyclerView rvReviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +81,8 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         rbRating = (RatingBar) findViewById(R.id.rating);
         tvVideosHeading = (TextView) findViewById(R.id.videos_heading);
         rvVideoList = (RecyclerView) findViewById(R.id.video_list);
+        tvReviewsHeading = (TextView) findViewById(R.id.reviews_heading);
+        rvReviews = (RecyclerView) findViewById(R.id.reviews);
 
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE);
@@ -140,12 +148,32 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             }
         }
 
+        // For vertical list of reviews
+        LinearLayoutManager llmReviews
+                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        rvReviews.setLayoutManager(llmReviews);
+        mReviewAdapter = new ReviewAdapter(new ArrayList<Review>(), (ReviewAdapter.Callbacks) this);
+        rvReviews.setAdapter(mReviewAdapter);
+
+        // Fetch reviews only if savedInstanceState == null
+        if (savedInstanceState != null && savedInstanceState.containsKey(EXTRA_REVIEWS)) {
+            List<Review> reviews = savedInstanceState.getParcelableArrayList(EXTRA_REVIEWS);
+            mReviewAdapter.add(reviews);
+        } else {
+            fetchReviews(Long.parseLong(mMovie.getId()));
+        }
+
         Picasso.get()
                 .load(strPoster)
+                .placeholder(R.drawable.placeholder)   // optional
+                .error(R.drawable.error)
                 .into(ivPoster);
         Picasso.get()
                 .load(strBackdrop)
+                .placeholder(R.drawable.placeholder)   // optional
+                .error(R.drawable.error)
                 .into(ivBackdrop);
+
     }
 
     private void fetchTrailers(long lMovieId) {
@@ -187,8 +215,57 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         }
     }
 
+    private void fetchReviews(long lMovieId) {
+        RestAdapter raAdapter = new RestAdapter.Builder()
+                .setEndpoint("http://api.themoviedb.org/3")
+                .setRequestInterceptor(new RequestInterceptor() {
+                    @Override
+                    public void intercept(RequestFacade request) {
+                        request.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
+                    }
+                })
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
+        MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
+        if (getIntent().hasExtra(EXTRA_MOVIE)) {
+            mtaService.getMovieReviews(lMovieId, new Callback<Review.ReviewResult>() {
+                @Override
+                public void success(Review.ReviewResult reviewResult, Response response) {
+                    mReviewAdapter.setReviews(reviewResult.getReviews());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    error.printStackTrace();
+                }
+            });
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            mtaService.getTVReviews(lMovieId, new Callback<Review.ReviewResult>() {
+                @Override
+                public void success(Review.ReviewResult reviewResult, Response response) {
+                    mReviewAdapter.setReviews(reviewResult.getReviews());
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                    error.printStackTrace();
+                }
+            });
+        }
+    }
+
+    private void closeOnError(String msg) {
+        finish();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
     public void watch(Video video, int nPosition) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" +
                 video.getKey())));
+    }
+
+    @Override
+    public void read(Review review, int position) {
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(review.getUrl())));
     }
 }
