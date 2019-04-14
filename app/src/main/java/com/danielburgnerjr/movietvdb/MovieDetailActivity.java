@@ -62,6 +62,8 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     TextView tvReviewsHeading;
     RecyclerView rvReviews;
 
+    Button mFavoriteButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,11 +85,31 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         rvVideoList = (RecyclerView) findViewById(R.id.video_list);
         tvReviewsHeading = (TextView) findViewById(R.id.reviews_heading);
         rvReviews = (RecyclerView) findViewById(R.id.reviews);
+        mFavoriteButton = (Button) findViewById(R.id.favorite_button);
+
+        Intent intent = getIntent();
+        if (intent == null) {
+            closeOnError("Intent is null");
+        }
+
+        Bundle data = getIntent().getExtras();
+        if (data == null) {
+            closeOnError(getString(R.string.Data_Not_Found));
+            return;
+        }
 
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
-            mMovie = getIntent().getParcelableExtra(EXTRA_MOVIE);
+            mMovie = data.getParcelable(EXTRA_MOVIE);
+            if (mMovie == null) {
+                closeOnError(getString(R.string.Data_Not_Found));
+                return;
+            }
         } else if (getIntent().hasExtra(EXTRA_TV)) {
-            tTV = getIntent().getParcelableExtra(EXTRA_TV);
+            tTV = data.getParcelable(EXTRA_TV);
+            if (tTV == null) {
+                closeOnError(getString(R.string.Data_Not_Found));
+                return;
+            }
         } else {
             throw new IllegalArgumentException("Detail activity must receive a movie or TV parcelable");
         }
@@ -115,6 +137,11 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             dUserRating = mMovie.getUserRating();
             strPoster = mMovie.getPoster();
             strBackdrop = mMovie.getBackdrop();
+            if (!mMovie.isFavorite()) {
+                mFavoriteButton.setText(R.string.favorite);
+            } else {
+                mFavoriteButton.setText(R.string.unfavorite);
+            }
         } else if (getIntent().hasExtra(EXTRA_TV)) {
             strDescription = tTV.getDescription();
             tvReleaseDateHeading.setText("First Air Date");
@@ -122,6 +149,12 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             dUserRating = tTV.getUserRating();
             strPoster = tTV.getPoster();
             strBackdrop = tTV.getBackdrop();
+            if (!tTV.isFavorite()) {
+                mFavoriteButton.setText(R.string.favorite);
+            } else {
+                mFavoriteButton.setText(R.string.unfavorite);
+            }
+
         }
 
         tvDescription.setText(strDescription);
@@ -160,8 +193,41 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             List<Review> reviews = savedInstanceState.getParcelableArrayList(EXTRA_REVIEWS);
             mReviewAdapter.add(reviews);
         } else {
-            fetchReviews(Long.parseLong(mMovie.getId()));
+            if (getIntent().hasExtra(EXTRA_MOVIE)) {
+                fetchReviews(Long.parseLong(mMovie.getId()));
+            } else if (getIntent().hasExtra(EXTRA_TV)) {
+                fetchReviews(Long.parseLong(tTV.getId()));
+            }
         }
+
+        PopularMoviesDbHelper pmDbHelper = new PopularMoviesDbHelper(this);
+        mDb = pmDbHelper.getWritableDatabase();
+
+        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (getIntent().hasExtra(EXTRA_MOVIE)) {
+                    if (mMovie.isFavorite()) {
+                        mMovie.setFavorite(false);
+                        mFavoriteButton.setText(R.string.favorite);
+                        removeFromFavorites();
+                    } else {
+                        mMovie.setFavorite(true);
+                        mFavoriteButton.setText(R.string.unfavorite);
+                        addToFavorites();
+                    }
+                } else if (getIntent().hasExtra(EXTRA_TV)) {
+                    if (tTV.isFavorite()) {
+                        tTV.setFavorite(false);
+                        mFavoriteButton.setText(R.string.favorite);
+                        removeFromFavorites();
+                    } else {
+                        tTV.setFavorite(true);
+                        mFavoriteButton.setText(R.string.unfavorite);
+                        addToFavorites();
+                    }
+                }
+            }
+        });
 
         Picasso.get()
                 .load(strPoster)
@@ -257,6 +323,38 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private void closeOnError(String msg) {
         finish();
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void addToFavorites() {
+        ContentValues cv = new ContentValues();
+        if (getIntent().hasExtra(EXTRA_MOVIE)) {
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID, mMovie.getId());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW, mMovie.getDescription());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH, mMovie.getPoster());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP, mMovie.getBackdrop());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
+
+            long rowCount = mDb.insert(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME, null, cv);
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID, mMovie.getId());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW, mMovie.getDescription());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH, mMovie.getPoster());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP, mMovie.getBackdrop());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
+            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
+
+            long rowCount = mDb.insert(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME, null, cv);
+
+        }
+    }
+
+    private void removeFromFavorites() {
+        Uri uri = PopularMoviesContract.PopularMoviesEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(mMovie.getId().toString()).build();
+        int rowCount = getContentResolver().delete(uri, null, null);
     }
 
     public void watch(Video video, int nPosition) {

@@ -56,6 +56,13 @@
                     android:layout_height="25dp"
                     android:numStars="10"
                     android:padding="4dp" />
+                <Button
+                    android:id="@+id/favorite_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/favorite"
+                    android:textColor="@color/favoritesTextColor"
+                    android:background="@color/favoritesBackground" />
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

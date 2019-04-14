@@ -2,6 +2,8 @@ package com.danielburgnerjr.movietvdb;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,6 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String CURRENT_RECYCLER_VIEW_POSITION = "CurrentRecyclerViewPosition";
     RecyclerView rvRecyclerView;
     Spinner spnMenuOptions;
     private MovieAdapter mMovieAdapter;
@@ -53,8 +56,7 @@ public class MainActivity extends AppCompatActivity {
         rvRecyclerView.setAdapter(mMovieAdapter);
         getPopularMovies();
 
-        String[] strOptions = new String[] { "Popular Movies", "Now Playing", "Top Rated Movies",
-                "Upcoming Movies", "Popular TV Shows", "Top Rated TV Shows"};
+        String[] strOptions = getResources().getStringArray(R.array.sort_options);
 
         ArrayAdapter<String> arAdapter = new ArrayAdapter<String>
                 (this, R.layout.spinner_item, strOptions);
@@ -65,30 +67,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                switch ((String)parent.getItemAtPosition(position)) {
-                    case "Top Rated Movies":
-                        rvRecyclerView.setAdapter(mMovieAdapter);
-                        getTopRatedMovies();
-                        break;
-                    case "Upcoming Movies":
-                        rvRecyclerView.setAdapter(mMovieAdapter);
-                        getUpcomingMovies();
-                        break;
-                    case "Now Playing":
-                        rvRecyclerView.setAdapter(mMovieAdapter);
-                        getNowPlayingMovies();
-                        break;
-                    case "Popular Movies":
+                switch (position) {
+                    case 0:
                         rvRecyclerView.setAdapter(mMovieAdapter);
                         getPopularMovies();
                         break;
-                    case "Popular TV Shows":
+                    case 1:
+                        rvRecyclerView.setAdapter(mMovieAdapter);
+                        getTopRatedMovies();
+                        break;
+                    case 2:
+                        rvRecyclerView.setAdapter(mMovieAdapter);
+                        getNowPlayingMovies();
+                        break;
+                    case 3:
+                        rvRecyclerView.setAdapter(mMovieAdapter);
+                        getUpcomingMovies();
+                        break;
+                    case 4:
+                        rvRecyclerView.setAdapter(mMovieAdapter);
+                        getFavoriteMovies();
+                        break;
+                    case 5:
                         rvRecyclerView.setAdapter(mTVAdapter);
                         getPopularTVShows();
                         break;
-                    case "Top Rated TV Shows":
+                    case 6:
                         rvRecyclerView.setAdapter(mTVAdapter);
                         getTopRatedTVShows();
+                        break;
+                    case 7:
+                        rvRecyclerView.setAdapter(mTVAdapter);
+                        getFavoriteTVShows();
                         break;
                 }
             }
@@ -200,6 +210,40 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void getFavoriteMovies() {
+        Cursor cursor = mDb.query(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+
+        //TODO Build the movie list from the stored Ids
+        List<Movie> result = new ArrayList<>();
+
+        try {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID));
+
+                Movie movC = new Movie(
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE)),
+                        cursor.getDouble(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE)),
+                        true);
+                System.out.println(movC.getPoster() + " " + movC.getBackdrop());
+                result.add(movC);
+            }
+        } finally {
+            cursor.close();
+        }
+        maAdapter.setMovieList(result);
+    }
+
     private void getPopularTVShows() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
@@ -248,5 +292,55 @@ public class MainActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
+    }
+
+    private void getFavoriteTVShows() {
+        Cursor cursor = mDb.query(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+
+        //TODO Build the movie list from the stored Ids
+        List<Movie> result = new ArrayList<>();
+
+        try {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID));
+
+                Movie movC = new Movie(
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP)),
+                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE)),
+                        cursor.getDouble(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE)),
+                        true);
+                System.out.println(movC.getPoster() + " " + movC.getBackdrop());
+                result.add(movC);
+            }
+        } finally {
+            cursor.close();
+        }
+        maAdapter.setMovieList(result);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        GridLayoutManager layoutManager = (GridLayoutManager) rvRecyclerView.getLayoutManager();
+        outState.putInt(CURRENT_RECYCLER_VIEW_POSITION, layoutManager.findFirstVisibleItemPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            int currentPosition = savedInstanceState.getInt(CURRENT_RECYCLER_VIEW_POSITION);
+            rvRecyclerView.scrollToPosition(currentPosition);
+        }
     }
 }
