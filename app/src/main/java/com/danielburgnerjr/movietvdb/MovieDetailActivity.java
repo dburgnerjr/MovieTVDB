@@ -34,6 +34,8 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
+import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
 import com.squareup.picasso.Picasso;
 /**
  * Created by dburgnerjr on 6/5/17.
@@ -50,6 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private TV tTV;
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
+    private SQLiteDatabase mDb;
 
     ImageView ivBackdrop;
     ImageView ivPoster;
@@ -200,7 +203,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             }
         }
 
-        PopularMoviesDbHelper pmDbHelper = new PopularMoviesDbHelper(this);
+        MovieTVDbHelper pmDbHelper = new MovieTVDbHelper(this);
         mDb = pmDbHelper.getWritableDatabase();
 
         mFavoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -230,12 +233,12 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         });
 
         Picasso.get()
-                .load(strPoster)
+                .load(TMDB_IMAGE_PATH + strPoster)
                 .placeholder(R.drawable.placeholder)   // optional
                 .error(R.drawable.error)
                 .into(ivPoster);
         Picasso.get()
-                .load(strBackdrop)
+                .load(TMDB_IMAGE_PATH + strBackdrop)
                 .placeholder(R.drawable.placeholder)   // optional
                 .error(R.drawable.error)
                 .into(ivBackdrop);
@@ -328,33 +331,40 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private void addToFavorites() {
         ContentValues cv = new ContentValues();
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID, mMovie.getId());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW, mMovie.getDescription());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH, mMovie.getPoster());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP, mMovie.getBackdrop());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID, mMovie.getId());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW, mMovie.getDescription());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_POSTERPATH, mMovie.getPoster());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP, mMovie.getBackdrop());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
+            cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
 
-            long rowCount = mDb.insert(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME, null, cv);
+            long rowCount = mDb.insert(MovieTVDBContract.MovieEntry.TABLE_NAME, null, cv);
         } else if (getIntent().hasExtra(EXTRA_TV)) {
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID, mMovie.getId());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW, mMovie.getDescription());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH, mMovie.getPoster());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP, mMovie.getBackdrop());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
-            cv.put(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_ID, tTV.getId());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE, tTV.getTitle());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW, tTV.getDescription());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_POSTERPATH, tTV.getPoster());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP, tTV.getBackdrop());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE, tTV.getReleaseDate());
+            cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE, tTV.getUserRating());
 
-            long rowCount = mDb.insert(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME, null, cv);
+            long rowCount = mDb.insert(MovieTVDBContract.TVEntry.TABLE_NAME, null, cv);
 
         }
     }
 
     private void removeFromFavorites() {
-        Uri uri = PopularMoviesContract.PopularMoviesEntry.CONTENT_URI;
-        uri = uri.buildUpon().appendPath(mMovie.getId().toString()).build();
-        int rowCount = getContentResolver().delete(uri, null, null);
+        if (getIntent().hasExtra(EXTRA_MOVIE)) {
+            Uri uri = MovieTVDBContract.MovieEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(mMovie.getId().toString()).build();
+            int rowCount = getContentResolver().delete(uri, null, null);
+        } else if (getIntent().hasExtra(EXTRA_TV)) {
+            Uri uri = MovieTVDBContract.TVEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(tTV.getId().toString()).build();
+            int rowCount = getContentResolver().delete(uri, null, null);
+
+        }
     }
 
     public void watch(Video video, int nPosition) {

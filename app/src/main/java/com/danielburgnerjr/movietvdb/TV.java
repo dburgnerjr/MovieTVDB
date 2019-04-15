@@ -8,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class TV implements Parcelable {
-    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
     @SerializedName("id")
     private String strId;
@@ -31,7 +30,20 @@ public class TV implements Parcelable {
     @SerializedName("vote_average")
     private double dUserRating;
 
+    private boolean isFavorite = false;
+
     public TV() {}
+
+    public TV(String strID, String strT, String strD, String strP, String strBD, String strRD, double dVA, boolean bF) {
+        this.strId = strID;
+        this.strTitle = strT;
+        this.strDescription = strD;
+        this.strPoster = strP;
+        this.strBackdrop = strBD;
+        this.strReleaseDate = strRD;
+        this.dUserRating = dVA;
+        this.isFavorite = bF;
+    }
 
     protected TV(Parcel in) {
         strId = in.readString();
@@ -41,6 +53,7 @@ public class TV implements Parcelable {
         strBackdrop = in.readString();
         strReleaseDate = in.readString();
         dUserRating = in.readDouble();
+        isFavorite = in.readByte() != 0;
     }
 
     public static final Creator<TV> CREATOR = new Creator<TV>() {
@@ -68,7 +81,7 @@ public class TV implements Parcelable {
     }
 
     public String getPoster() {
-        return TMDB_IMAGE_PATH + strPoster;
+        return strPoster;
     }
 
     public void setPoster(String strP) {
@@ -84,7 +97,7 @@ public class TV implements Parcelable {
     }
 
     public String getBackdrop() {
-        return TMDB_IMAGE_PATH + strBackdrop;
+        return strBackdrop;
     }
 
     public void setBackdrop(String strB) {
@@ -107,6 +120,14 @@ public class TV implements Parcelable {
         return dUserRating;
     }
 
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean bFavorite) {
+        isFavorite = bFavorite;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -121,6 +142,7 @@ public class TV implements Parcelable {
         parP.writeString(strBackdrop);
         parP.writeString(strReleaseDate);
         parP.writeDouble(dUserRating);
+        parP.writeByte((byte) (isFavorite ? 1 : 0));
     }
 
     public static class TVResult {

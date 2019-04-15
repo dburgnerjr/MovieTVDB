@@ -16,6 +16,7 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private List<TV> mTVList;
     private LayoutInflater liInflater;
     private Context conContext;
+    public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
     public TVAdapter(Context conC) {
         this.conContext = conC;
@@ -42,7 +43,7 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
         TV tT = mTVList.get(nP);
         Picasso.get()
-                .load(tT.getPoster())
+                .load(TMDB_IMAGE_PATH + tT.getPoster())
                 .placeholder(R.drawable.placeholder)   // optional
                 .error(R.drawable.error)
                 .into(mvhH.ivImageView);

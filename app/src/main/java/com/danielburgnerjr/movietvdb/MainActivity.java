@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
+import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
+import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner spnMenuOptions;
     private MovieAdapter mMovieAdapter;
     private TVAdapter mTVAdapter;
+    private SQLiteDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
         spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
+
+        MovieTVDbHelper mtDbHelper = new MovieTVDbHelper(this);
+        mDb = mtDbHelper.getWritableDatabase();
 
         ButterKnife.bind(this);
         rvRecyclerView.setHasFixedSize(true);
@@ -211,29 +217,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFavoriteMovies() {
-        Cursor cursor = mDb.query(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME,
+        Cursor cursor = mDb.query(MovieTVDBContract.MovieEntry.TABLE_NAME,
                 null,
                 null,
                 null,
                 null,
                 null,
-                PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+                MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE);
 
         //TODO Build the movie list from the stored Ids
         List<Movie> result = new ArrayList<>();
 
         try {
             while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID));
+                String id = cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID));
 
                 Movie movC = new Movie(
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE)),
-                        cursor.getDouble(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_POSTERPATH)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE)),
+                        cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE)),
                         true);
                 System.out.println(movC.getPoster() + " " + movC.getBackdrop());
                 result.add(movC);
@@ -241,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             cursor.close();
         }
-        maAdapter.setMovieList(result);
+        mMovieAdapter.setMovieList(result);
     }
 
     private void getPopularTVShows() {
@@ -295,37 +301,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getFavoriteTVShows() {
-        Cursor cursor = mDb.query(PopularMoviesContract.PopularMoviesEntry.TABLE_NAME,
+        Cursor cursor = mDb.query(MovieTVDBContract.TVEntry.TABLE_NAME,
                 null,
                 null,
                 null,
                 null,
                 null,
-                PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE);
+                MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE);
 
-        //TODO Build the movie list from the stored Ids
-        List<Movie> result = new ArrayList<>();
+        //TODO Build the TV list from the stored Ids
+        List<TV> result = new ArrayList<>();
 
         try {
             while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID));
+                String id = cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ID));
 
-                Movie movC = new Movie(
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_ORIGINALTITLE)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_OVERVIEW)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_POSTERPATH)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_BACKDROP)),
-                        cursor.getString(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_RELEASEDATE)),
-                        cursor.getDouble(cursor.getColumnIndex(PopularMoviesContract.PopularMoviesEntry.COLUMN_NAME_VOTEAVERAGE)),
+                TV tvC = new TV(
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ID)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_POSTERPATH)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP)),
+                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE)),
+                        cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE)),
                         true);
-                System.out.println(movC.getPoster() + " " + movC.getBackdrop());
-                result.add(movC);
+                System.out.println(tvC.getPoster() + " " + tvC.getBackdrop());
+                result.add(tvC);
             }
         } finally {
             cursor.close();
         }
-        maAdapter.setMovieList(result);
+        mTVAdapter.setTVList(result);
     }
 
     @Override
