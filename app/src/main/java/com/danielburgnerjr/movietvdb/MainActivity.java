@@ -1,30 +1,23 @@
 package com.danielburgnerjr.movietvdb;
 
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
 import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
 import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
-import com.squareup.picasso.Picasso;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
         spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         MovieTVDbHelper mtDbHelper = new MovieTVDbHelper(this);
         mDb = mtDbHelper.getWritableDatabase();

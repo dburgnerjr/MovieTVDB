@@ -3,8 +3,6 @@ package com.danielburgnerjr.movietvdb;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,9 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +32,8 @@ import retrofit.client.Response;
 
 import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
 import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.squareup.picasso.Picasso;
 /**
  * Created by dburgnerjr on 6/5/17.
@@ -71,6 +69,9 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         String strDescription = null;
         String strReleaseDate = null;

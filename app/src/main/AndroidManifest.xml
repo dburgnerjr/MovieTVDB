@@ -22,7 +22,8 @@
             android:label="MovieDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8379108590476103~6387725167"/>
     </application>
-
 </manifest>
