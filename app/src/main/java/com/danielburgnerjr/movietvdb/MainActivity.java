@@ -18,6 +18,7 @@ import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter mMovieAdapter;
     private TVAdapter mTVAdapter;
     private SQLiteDatabase mDb;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
         spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
-        AdView mAdView = findViewById(R.id.adView);
+        MobileAds.initialize(this, String.valueOf(R.string.admob_app_id));
+        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 

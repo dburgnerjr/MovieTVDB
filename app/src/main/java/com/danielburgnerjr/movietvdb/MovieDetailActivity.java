@@ -34,6 +34,7 @@ import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
 import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.squareup.picasso.Picasso;
 /**
  * Created by dburgnerjr on 6/5/17.
@@ -51,6 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
     private SQLiteDatabase mDb;
+    private AdView mAdView;
 
     ImageView ivBackdrop;
     ImageView ivPoster;
@@ -69,7 +71,8 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        AdView mAdView = findViewById(R.id.adView);
+        MobileAds.initialize(this, String.valueOf(R.string.admob_app_id));
+        mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
