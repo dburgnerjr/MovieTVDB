@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -358,6 +358,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         }
     }
 
+    // IllegalArgumentException - Unknown URL content
     private void removeFromFavorites() {
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             Uri uri = MovieTVDBContract.MovieEntry.CONTENT_URI;

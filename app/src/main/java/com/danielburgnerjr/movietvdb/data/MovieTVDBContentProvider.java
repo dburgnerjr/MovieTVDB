@@ -7,8 +7,8 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class MovieTVDBContentProvider extends ContentProvider {
     public static final int MOVIES = 100;
@@ -94,9 +94,9 @@ public class MovieTVDBContentProvider extends ContentProvider {
                 }
                 break;
             case TVS:
-                id = db.insert(MovieTVDBContract.MovieEntry.TABLE_NAME, null, values);
+                id = db.insert(MovieTVDBContract.TVEntry.TABLE_NAME, null, values);
                 if (id > 0) {
-                    returnUri = ContentUris.withAppendedId(MovieTVDBContract.MovieEntry.CONTENT_URI, id);
+                    returnUri = ContentUris.withAppendedId(MovieTVDBContract.TVEntry.CONTENT_URI, id);
                 } else {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 }
