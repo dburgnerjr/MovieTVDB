@@ -22,11 +22,11 @@ public class MovieTVDBContentProvider extends ContentProvider {
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.PATH_ENTRY, MOVIES);
-        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.PATH_ENTRY + "/*", MOVIE_ID);
+        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.MOVIE_ENTRY, MOVIES);
+        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.MOVIE_ENTRY + "/*", MOVIE_ID);
 
-        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.PATH_ENTRY, TVS);
-        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.PATH_ENTRY + "/*", TV_ID);
+        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.TV_ENTRY, TVS);
+        uriMatcher.addURI(MovieTVDBContract.AUTHORITY, MovieTVDBContract.TV_ENTRY + "/*", TV_ID);
         return uriMatcher;
     }
 

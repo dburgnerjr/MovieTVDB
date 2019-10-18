@@ -9,12 +9,13 @@ public class MovieTVDBContract {
 
     public static final String AUTHORITY = "com.danielburgnerjr.movietvdb";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
-    public static final String PATH_ENTRY = "entry";
+    public static final String MOVIE_ENTRY = "movie";
+    public static final String TV_ENTRY = "tv";
 
     /* Define table and content */
     public static class MovieEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ENTRY).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(MOVIE_ENTRY).build();
 
         public static final String TABLE_NAME = "favorite_movie";
         public static final String COLUMN_NAME_ID = "id";
@@ -29,7 +30,7 @@ public class MovieTVDBContract {
 
     public static class TVEntry implements BaseColumns {
 
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ENTRY).build();
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TV_ENTRY).build();
 
         public static final String TABLE_NAME = "favorite_tv";
         public static final String COLUMN_NAME_ID = "id";

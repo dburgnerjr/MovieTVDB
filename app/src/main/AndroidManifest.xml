@@ -27,7 +27,7 @@
         </activity>
         <provider
             android:name=".data.MovieTVDBContentProvider"
-            android:authorities="com.danielburgnerjr.movietvdb.data"
+            android:authorities="com.danielburgnerjr.movietvdb"
             android:exported="false">
         </provider>
         <meta-data

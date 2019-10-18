@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class MovieTVDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "popularmovie.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public MovieTVDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -21,7 +21,7 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE + " TEXT NOT NULL, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW + " TEXT NOT NULL, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_POSTERPATH + " TEXT NOT NULL, " +
-                MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP + " TEXT NOT NULL, " +
+                MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP + " TEXT, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE + " TEXT NOT NULL, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE + " TEXT NOT NULL, " +
                 MovieTVDBContract.MovieEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP " +
@@ -36,7 +36,7 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
                 MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE + " TEXT NOT NULL, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW + " TEXT NOT NULL, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_POSTERPATH + " TEXT NOT NULL, " +
-                MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP + " TEXT NOT NULL, " +
+                MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP + " TEXT, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE + " TEXT NOT NULL, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE + " TEXT NOT NULL, " +
                 MovieTVDBContract.TVEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP " +
