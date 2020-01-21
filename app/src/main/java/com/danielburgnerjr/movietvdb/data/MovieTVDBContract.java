@@ -3,6 +3,7 @@ package com.danielburgnerjr.movietvdb.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+@SuppressWarnings("WeakerAccess")
 public class MovieTVDBContract {
 
     private MovieTVDBContract(){}

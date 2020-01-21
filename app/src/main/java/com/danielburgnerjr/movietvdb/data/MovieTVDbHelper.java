@@ -16,7 +16,6 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " +
                 MovieTVDBContract.MovieEntry.TABLE_NAME + " (" +
-                //MovieTVDBContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_ID + " TEXT NOT NULL PRIMARY KEY, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE + " TEXT NOT NULL, " +
                 MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW + " TEXT NOT NULL, " +
@@ -31,7 +30,6 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_TV_TABLE = "CREATE TABLE " +
                 MovieTVDBContract.TVEntry.TABLE_NAME + " (" +
-                //MovieTVDBContract.TVEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_ID + " TEXT NOT NULL PRIMARY KEY, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE + " TEXT NOT NULL, " +
                 MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW + " TEXT NOT NULL, " +
@@ -43,7 +41,6 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
                 ");";
 
         db.execSQL(SQL_CREATE_TV_TABLE);
-
     }
 
     @Override
@@ -51,7 +48,5 @@ public class MovieTVDbHelper extends SQLiteOpenHelper {
         db.execSQL(" DROP TABLE IF EXISTS " + MovieTVDBContract.MovieEntry.TABLE_NAME);
         db.execSQL(" DROP TABLE IF EXISTS " + MovieTVDBContract.TVEntry.TABLE_NAME);
         onCreate(db);
-
     }
-
 }

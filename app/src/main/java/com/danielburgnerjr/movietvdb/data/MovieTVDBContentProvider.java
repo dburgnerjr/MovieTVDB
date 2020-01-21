@@ -3,6 +3,7 @@ package com.danielburgnerjr.movietvdb.data;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,6 +17,8 @@ public class MovieTVDBContentProvider extends ContentProvider {
     public static final int TVS = 200;
     public static final int TV_ID = 201;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    Context context;
+
 
     MovieTVDbHelper movieDbHelper;
 
@@ -32,7 +35,8 @@ public class MovieTVDBContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        movieDbHelper = new MovieTVDbHelper(getContext());
+        context = getContext();
+        movieDbHelper = new MovieTVDbHelper(context);
         return true;
     }
 
@@ -66,7 +70,7 @@ public class MovieTVDBContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        retCursor.setNotificationUri(context.getContentResolver(), uri);
 
         return retCursor;
     }
@@ -104,7 +108,7 @@ public class MovieTVDBContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        context.getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
 
@@ -133,14 +137,16 @@ public class MovieTVDBContentProvider extends ContentProvider {
         switch (match) {
             case MOVIE_ID:
                 if (moviesDeleted != 0) {
-                    getContext().getContentResolver().notifyChange(uri, null);
+                    context.getContentResolver().notifyChange(uri, null);
                 }
                 deletedRecords = moviesDeleted;
+                break;
             case TV_ID:
                 if (tvsDeleted != 0) {
-                    getContext().getContentResolver().notifyChange(uri, null);
+                    context.getContentResolver().notifyChange(uri, null);
                 }
                 deletedRecords = tvsDeleted;
+                break;
         }
         return deletedRecords;
     }
