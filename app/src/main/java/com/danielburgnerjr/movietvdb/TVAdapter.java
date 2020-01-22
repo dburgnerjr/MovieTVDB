@@ -2,6 +2,8 @@ package com.danielburgnerjr.movietvdb;
 
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     private List<TV> mTVList;
     private LayoutInflater liInflater;
@@ -24,7 +27,8 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     }
 
     @Override
-    public MovieViewHolder onCreateViewHolder(ViewGroup vgParent, final int nViewType) {
+    @NonNull
+    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup vgParent, final int nViewType) {
         View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
         final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
         vView.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +59,7 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     }
 
     public void setTVList(List<TV> tl) {
-        this.mTVList = new ArrayList<TV>();
+        this.mTVList = new ArrayList<>();
         this.mTVList.addAll(tl);
         notifyDataSetChanged();
     }

@@ -8,9 +8,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class Video implements Parcelable {
-
-    public static final String LOG_TAG = Video.class.getSimpleName();
 
     @SerializedName("id")
     private String strID;
@@ -25,16 +24,8 @@ public class Video implements Parcelable {
 
     private Video() {}
 
-    public String getName() {
-        return strName;
-    }
-
     public String getKey() {
         return strKey;
-    }
-
-    public String getVideoUrl() {
-        return "http://www.youtube.com/watch?v=" + strKey;
     }
 
     public static final Parcelable.Creator<Video> CREATOR = new Creator<Video>() {
@@ -66,7 +57,6 @@ public class Video implements Parcelable {
     }
 
     public class VideoResult {
-
         @SerializedName("results")
         private List<Video> videoList = new ArrayList<>();
 
@@ -74,5 +64,4 @@ public class Video implements Parcelable {
             return videoList;
         }
     }
-
 }
