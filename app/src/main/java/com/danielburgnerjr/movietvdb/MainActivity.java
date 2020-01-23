@@ -3,6 +3,8 @@ package com.danielburgnerjr.movietvdb;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,14 +38,14 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter mMovieAdapter;
     private TVAdapter mTVAdapter;
     private SQLiteDatabase mDb;
-    private AdView mAdView;
+    AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        rvRecyclerView = (RecyclerView) findViewById(R.id.rvRecyclerView);
-        spnMenuOptions = (Spinner) findViewById(R.id.spnMenuOptions);
+        rvRecyclerView = findViewById(R.id.rvRecyclerView);
+        spnMenuOptions = findViewById(R.id.spnMenuOptions);
         MobileAds.initialize(this, String.valueOf(R.string.admob_app_id));
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -55,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         rvRecyclerView.setHasFixedSize(true);
         rvRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
+        if (rvRecyclerView.getLayoutManager() != null)
+            rvRecyclerView.getLayoutManager().setMeasurementCacheEnabled(false);
         mMovieAdapter = new MovieAdapter(this);
         mTVAdapter = new TVAdapter(this);
         rvRecyclerView.setAdapter(mMovieAdapter);
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         String[] strOptions = getResources().getStringArray(R.array.sort_options);
 
-        ArrayAdapter<String> arAdapter = new ArrayAdapter<String>
+        ArrayAdapter<String> arAdapter = new ArrayAdapter<>
                 (this, R.layout.spinner_item, strOptions);
 
         spnMenuOptions.setAdapter(arAdapter);
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // TODO Auto-generated method stub
             }
         });
     }
@@ -227,25 +229,20 @@ public class MainActivity extends AppCompatActivity {
         //TODO Build the movie list from the stored Ids
         List<Movie> result = new ArrayList<>();
 
-        try {
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID));
-
-                Movie movC = new Movie(
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_POSTERPATH)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE)),
-                        cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE)),
-                        true);
-                System.out.println(movC.getPoster() + " " + movC.getBackdrop());
-                result.add(movC);
-            }
-        } finally {
-            cursor.close();
+        while (cursor.moveToNext()) {
+            Movie movC = new Movie(
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_OVERVIEW)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_POSTERPATH)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_BACKDROP)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE)),
+                    cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE)),
+                    true);
+            System.out.println(movC.getPoster() + " " + movC.getBackdrop());
+            result.add(movC);
         }
+        cursor.close();
         mMovieAdapter.setMovieList(result);
     }
 
@@ -311,41 +308,35 @@ public class MainActivity extends AppCompatActivity {
         //TODO Build the TV list from the stored Ids
         List<TV> result = new ArrayList<>();
 
-        try {
-            while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ID));
-
-                TV tvC = new TV(
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ID)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_POSTERPATH)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP)),
-                        cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE)),
-                        cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE)),
-                        true);
-                System.out.println(tvC.getPoster() + " " + tvC.getBackdrop());
-                result.add(tvC);
-            }
-        } finally {
-            cursor.close();
+        while (cursor.moveToNext()) {
+            TV tvC = new TV(
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ID)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_OVERVIEW)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_POSTERPATH)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_BACKDROP)),
+                    cursor.getString(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE)),
+                    cursor.getDouble(cursor.getColumnIndex(MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE)),
+                    true);
+            System.out.println(tvC.getPoster() + " " + tvC.getBackdrop());
+            result.add(tvC);
         }
+        cursor.close();
         mTVAdapter.setTVList(result);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         GridLayoutManager layoutManager = (GridLayoutManager) rvRecyclerView.getLayoutManager();
-        outState.putInt(CURRENT_RECYCLER_VIEW_POSITION, layoutManager.findFirstVisibleItemPosition());
+        if(layoutManager != null)
+            outState.putInt(CURRENT_RECYCLER_VIEW_POSITION, layoutManager.findFirstVisibleItemPosition());
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState != null) {
-            int currentPosition = savedInstanceState.getInt(CURRENT_RECYCLER_VIEW_POSITION);
-            rvRecyclerView.scrollToPosition(currentPosition);
-        }
+        int currentPosition = savedInstanceState.getInt(CURRENT_RECYCLER_VIEW_POSITION);
+        rvRecyclerView.scrollToPosition(currentPosition);
     }
 }

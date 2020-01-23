@@ -52,7 +52,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
     private SQLiteDatabase mDb;
-    private AdView mAdView;
+    AdView mAdView;
 
     ImageView ivBackdrop;
     ImageView ivPoster;
@@ -82,17 +82,17 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         String strPoster = null;
         String strBackdrop = null;
 
-        ivBackdrop = (ImageView) findViewById(R.id.ivBackdrop);
-        ivPoster = (ImageView) findViewById(R.id.movie_poster);
-        tvDescription = (TextView) findViewById(R.id.movie_description);
-        tvReleaseDateHeading = (TextView) findViewById(R.id.release_date_heading);
-        tvReleaseDate = (TextView) findViewById(R.id.release_date);
-        rbRating = (RatingBar) findViewById(R.id.rating);
-        tvVideosHeading = (TextView) findViewById(R.id.videos_heading);
-        rvVideoList = (RecyclerView) findViewById(R.id.video_list);
-        tvReviewsHeading = (TextView) findViewById(R.id.reviews_heading);
-        rvReviews = (RecyclerView) findViewById(R.id.reviews);
-        mFavoriteButton = (Button) findViewById(R.id.favorite_button);
+        ivBackdrop = findViewById(R.id.ivBackdrop);
+        ivPoster = findViewById(R.id.movie_poster);
+        tvDescription = findViewById(R.id.movie_description);
+        tvReleaseDateHeading = findViewById(R.id.release_date_heading);
+        tvReleaseDate = findViewById(R.id.release_date);
+        rbRating = findViewById(R.id.rating);
+        tvVideosHeading = findViewById(R.id.videos_heading);
+        rvVideoList = findViewById(R.id.video_list);
+        tvReviewsHeading = findViewById(R.id.reviews_heading);
+        rvReviews = findViewById(R.id.reviews);
+        mFavoriteButton = findViewById(R.id.favorite_button);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -121,9 +121,9 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             throw new IllegalArgumentException("Detail activity must receive a movie or TV parcelable");
         }
 
-        Toolbar tbToolbar = (Toolbar) findViewById(R.id.tbToolbar);
+        Toolbar tbToolbar = findViewById(R.id.tbToolbar);
         setSupportActionBar(tbToolbar);
-        CollapsingToolbarLayout ctlToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        CollapsingToolbarLayout ctlToolbarLayout = findViewById(R.id.toolbar_layout);
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             ctlToolbarLayout.setTitle(mMovie.getTitle());
         } else if (getIntent().hasExtra(EXTRA_TV)) {
@@ -139,7 +139,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
 
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             strDescription = mMovie.getDescription();
-            tvReleaseDateHeading.setText("Release Date");
+            tvReleaseDateHeading.setText(R.string.release_date_title);
             strReleaseDate = mMovie.getReleaseDate();
             dUserRating = mMovie.getUserRating();
             strPoster = mMovie.getPoster();
@@ -151,7 +151,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             }
         } else if (getIntent().hasExtra(EXTRA_TV)) {
             strDescription = tTV.getDescription();
-            tvReleaseDateHeading.setText("First Air Date");
+            tvReleaseDateHeading.setText(R.string.first_air_date_title);
             strReleaseDate = tTV.getReleaseDate();
             dUserRating = tTV.getUserRating();
             strPoster = tTV.getPoster();
@@ -192,7 +192,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         LinearLayoutManager llmReviews
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         rvReviews.setLayoutManager(llmReviews);
-        mReviewAdapter = new ReviewAdapter(new ArrayList<Review>(), (ReviewAdapter.Callbacks) this);
+        mReviewAdapter = new ReviewAdapter(new ArrayList<Review>(), this);
         rvReviews.setAdapter(mReviewAdapter);
 
         // Fetch reviews only if savedInstanceState == null
@@ -216,21 +216,34 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
                     if (mMovie.isFavorite()) {
                         mMovie.setFavorite(false);
                         mFavoriteButton.setText(R.string.favorite);
-                        removeFromFavorites();
+                        if (removeFromFavorites() != 0)
+                            Toast.makeText(MovieDetailActivity.this, "This movie was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
                     } else {
                         mMovie.setFavorite(true);
                         mFavoriteButton.setText(R.string.unfavorite);
-                        addToFavorites();
+                        if (addToFavorites() != 0)
+                            Toast.makeText(MovieDetailActivity.this, "This movie was successfully added to your favorites.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
                     }
                 } else if (getIntent().hasExtra(EXTRA_TV)) {
                     if (tTV.isFavorite()) {
                         tTV.setFavorite(false);
                         mFavoriteButton.setText(R.string.favorite);
+                        if (removeFromFavorites() != 0)
+                            Toast.makeText(MovieDetailActivity.this, "This TV show was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
                         removeFromFavorites();
                     } else {
                         tTV.setFavorite(true);
                         mFavoriteButton.setText(R.string.unfavorite);
-                        addToFavorites();
+                        if (addToFavorites() != 0)
+                            Toast.makeText(MovieDetailActivity.this, "This TV show was successfully added to your favorites.", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -332,8 +345,9 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    private void addToFavorites() {
+    private long addToFavorites() {
         ContentValues cv = new ContentValues();
+        long rowCount = 0L;
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_ID, mMovie.getId());
             cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_ORIGINALTITLE, mMovie.getTitle());
@@ -343,7 +357,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_RELEASEDATE, mMovie.getReleaseDate());
             cv.put(MovieTVDBContract.MovieEntry.COLUMN_NAME_VOTEAVERAGE, mMovie.getUserRating());
 
-            long rowCount = mDb.insert(MovieTVDBContract.MovieEntry.TABLE_NAME, null, cv);
+            rowCount = mDb.insert(MovieTVDBContract.MovieEntry.TABLE_NAME, null, cv);
         } else if (getIntent().hasExtra(EXTRA_TV)) {
             cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_ID, tTV.getId());
             cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_ORIGINALTITLE, tTV.getTitle());
@@ -353,23 +367,23 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
             cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_RELEASEDATE, tTV.getReleaseDate());
             cv.put(MovieTVDBContract.TVEntry.COLUMN_NAME_VOTEAVERAGE, tTV.getUserRating());
 
-            long rowCount = mDb.insert(MovieTVDBContract.TVEntry.TABLE_NAME, null, cv);
-
+            rowCount = mDb.insert(MovieTVDBContract.TVEntry.TABLE_NAME, null, cv);
         }
+        return rowCount;
     }
 
-    // IllegalArgumentException - Unknown URL content
-    private void removeFromFavorites() {
+    private int removeFromFavorites() {
+        int rowCount = 0;
         if (getIntent().hasExtra(EXTRA_MOVIE)) {
             Uri uri = MovieTVDBContract.MovieEntry.CONTENT_URI;
-            uri = uri.buildUpon().appendPath(mMovie.getId().toString()).build();
-            int rowCount = getContentResolver().delete(uri, null, null);
+            uri = uri.buildUpon().appendPath(mMovie.getId()).build();
+            rowCount = getContentResolver().delete(uri, null, null);
         } else if (getIntent().hasExtra(EXTRA_TV)) {
             Uri uri = MovieTVDBContract.TVEntry.CONTENT_URI;
-            uri = uri.buildUpon().appendPath(tTV.getId().toString()).build();
-            int rowCount = getContentResolver().delete(uri, null, null);
-
+            uri = uri.buildUpon().appendPath(tTV.getId()).build();
+            rowCount = getContentResolver().delete(uri, null, null);
         }
+        return rowCount;
     }
 
     public void watch(Video video, int nPosition) {
