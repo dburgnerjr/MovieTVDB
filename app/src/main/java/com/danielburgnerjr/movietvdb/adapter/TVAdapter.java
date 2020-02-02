@@ -1,4 +1,4 @@
-package com.danielburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.danielburgnerjr.movietvdb.MovieDetailActivity;
+import com.danielburgnerjr.movietvdb.R;
+import com.danielburgnerjr.movietvdb.model.TV;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-    private List<Movie> mMovieList;
+public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
+    private List<TV> mTVList;
     private LayoutInflater liInflater;
     private Context conContext;
     public static final String TMDB_IMAGE_PATH = "http://image.tmdb.org/t/p/w500";
 
-    public MovieAdapter(Context conC) {
+    public TVAdapter(Context conC) {
         this.conContext = conC;
         this.liInflater = LayoutInflater.from(conC);
     }
@@ -36,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
             public void onClick(View vV) {
                 int nPos = mvhHolder.getAdapterPosition();
                 Intent intI = new Intent(conContext, MovieDetailActivity.class);
-                intI.putExtra(MovieDetailActivity.EXTRA_MOVIE, mMovieList.get(nPos));
+                intI.putExtra(MovieDetailActivity.EXTRA_TV, mTVList.get(nPos));
                 conContext.startActivity(intI);
             }
         });
@@ -45,9 +48,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public void onBindViewHolder(MovieViewHolder mvhH, int nP) {
-        Movie mM = mMovieList.get(nP);
+        TV tT = mTVList.get(nP);
         Picasso.get()
-                .load(TMDB_IMAGE_PATH + mM.getPoster())
+                .load(TMDB_IMAGE_PATH + tT.getPoster())
                 .placeholder(R.drawable.placeholder)   // optional
                 .error(R.drawable.error)
                 .into(mvhH.ivImageView);
@@ -55,12 +58,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (mMovieList == null) ? 0 : mMovieList.size();
+        return (mTVList == null) ? 0 : mTVList.size();
     }
 
-    public void setMovieList(List<Movie> ml) {
-        this.mMovieList = new ArrayList<>();
-        this.mMovieList.addAll(ml);
+    public void setTVList(List<TV> tl) {
+        this.mTVList = new ArrayList<>();
+        this.mTVList.addAll(tl);
         notifyDataSetChanged();
     }
 }

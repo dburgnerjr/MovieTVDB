@@ -1,4 +1,9 @@
-package com.danielburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb.api;
+
+import com.danielburgnerjr.movietvdb.model.Movie;
+import com.danielburgnerjr.movietvdb.model.Review;
+import com.danielburgnerjr.movietvdb.model.TV;
+import com.danielburgnerjr.movietvdb.model.Video;
 
 import retrofit.Callback;
 import retrofit.http.GET;

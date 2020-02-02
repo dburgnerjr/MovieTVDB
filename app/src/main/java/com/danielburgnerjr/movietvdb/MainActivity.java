@@ -15,9 +15,14 @@ import android.widget.Spinner;
 
 import butterknife.ButterKnife;
 
+import com.danielburgnerjr.movietvdb.adapter.MovieAdapter;
+import com.danielburgnerjr.movietvdb.adapter.TVAdapter;
+import com.danielburgnerjr.movietvdb.api.MovieTVAPI;
 import com.danielburgnerjr.movietvdb.data.MovieTVDBContract;
 import com.danielburgnerjr.movietvdb.data.MovieTVDbHelper;
 
+import com.danielburgnerjr.movietvdb.model.Movie;
+import com.danielburgnerjr.movietvdb.model.TV;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;

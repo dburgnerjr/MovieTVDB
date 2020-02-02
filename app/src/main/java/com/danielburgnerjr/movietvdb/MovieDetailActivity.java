@@ -6,6 +6,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.danielburgnerjr.movietvdb.adapter.ReviewAdapter;
+import com.danielburgnerjr.movietvdb.adapter.VideoAdapter;
+import com.danielburgnerjr.movietvdb.api.MovieTVAPI;
+import com.danielburgnerjr.movietvdb.model.Movie;
+import com.danielburgnerjr.movietvdb.model.Review;
+import com.danielburgnerjr.movietvdb.model.TV;
+import com.danielburgnerjr.movietvdb.model.Video;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;

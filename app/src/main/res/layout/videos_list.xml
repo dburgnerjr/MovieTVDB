@@ -17,6 +17,4 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_play_circle_outline_black_32dp"
         android:contentDescription="@string/play" />
-
-
 </FrameLayout>

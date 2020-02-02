@@ -20,5 +20,4 @@
         android:maxLines="8"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@android:color/black" />
-
 </LinearLayout>

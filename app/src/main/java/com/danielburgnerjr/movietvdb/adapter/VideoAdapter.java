@@ -1,4 +1,4 @@
-package com.danielburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.danielburgnerjr.movietvdb.R;
+import com.danielburgnerjr.movietvdb.model.Video;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

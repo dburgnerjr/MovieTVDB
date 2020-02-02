@@ -1,4 +1,4 @@
-package com.danielburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb.adapter;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.danielburgnerjr.movietvdb.R;
+import com.danielburgnerjr.movietvdb.model.Review;
 
 import java.util.ArrayList;
 import java.util.List;

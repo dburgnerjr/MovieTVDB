@@ -1,8 +1,5 @@
-package com.danielburgnerjr.movietvdb;
+package com.danielburgnerjr.movietvdb.model;
 
-/*
- * Created by dburgnerjr on 6/5/17.
- */
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("WeakerAccess")
-public class Movie implements Parcelable {
+public class TV implements Parcelable {
 
     @SerializedName("id")
     private String strId;
 
-    @SerializedName("title")
+    @SerializedName("name")
     private String strTitle;
 
     @SerializedName("poster_path")
@@ -29,7 +26,7 @@ public class Movie implements Parcelable {
     @SerializedName("backdrop_path")
     private String strBackdrop;
 
-    @SerializedName("release_date")
+    @SerializedName("first_air_date")
     private String strReleaseDate;
 
     @SerializedName("vote_average")
@@ -37,8 +34,7 @@ public class Movie implements Parcelable {
 
     private boolean isFavorite;
 
-
-    public Movie(String strID, String strT, String strD, String strP, String strBD, String strRD, double dVA, boolean bF) {
+    public TV(String strID, String strT, String strD, String strP, String strBD, String strRD, double dVA, boolean bF) {
         this.strId = strID;
         this.strTitle = strT;
         this.strDescription = strD;
@@ -49,7 +45,7 @@ public class Movie implements Parcelable {
         this.isFavorite = bF;
     }
 
-    protected Movie(Parcel in) {
+    protected TV(Parcel in) {
         strId = in.readString();
         strTitle = in.readString();
         strPoster = in.readString();
@@ -60,12 +56,12 @@ public class Movie implements Parcelable {
         isFavorite = in.readByte() != 0;
     }
 
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+    public static final Creator<TV> CREATOR = new Creator<TV>() {
         @Override
-        public Movie createFromParcel(Parcel in) { return new Movie(in); }
+        public TV createFromParcel(Parcel in) { return new TV(in); }
 
         @Override
-        public Movie[] newArray(int nSize) { return new Movie[nSize]; }
+        public TV[] newArray(int nSize) { return new TV[nSize]; }
     };
 
     public String getId() {
@@ -125,11 +121,11 @@ public class Movie implements Parcelable {
         parP.writeByte((byte) (isFavorite ? 1 : 0));
     }
 
-    public static class MovieResult {
+    public static class TVResult {
         @SerializedName("results")
-        private List<Movie> mResults = new ArrayList<>();
+        private List<TV> mResults = new ArrayList<>();
 
-        public List<Movie> getResults() {
+        public List<TV> getResults() {
             return mResults;
         }
     }
