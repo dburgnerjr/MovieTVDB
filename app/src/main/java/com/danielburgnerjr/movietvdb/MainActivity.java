@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -125,12 +124,7 @@ public class MainActivity extends AppCompatActivity {
     private void getPopularMovies() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -150,12 +144,7 @@ public class MainActivity extends AppCompatActivity {
     private void getTopRatedMovies() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -175,12 +164,7 @@ public class MainActivity extends AppCompatActivity {
     private void getNowPlayingMovies() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -200,12 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private void getUpcomingMovies() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -254,12 +233,7 @@ public class MainActivity extends AppCompatActivity {
     private void getPopularTVShows() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -279,12 +253,7 @@ public class MainActivity extends AppCompatActivity {
     private void getTopRatedTVShows() {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade rfRequest) {
-                        rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(rfRequest -> rfRequest.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);

@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +32,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import retrofit.Callback;
-import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -180,7 +178,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         rvVideoList.setLayoutManager(layoutManager);
-        mVideoAdapter = new VideoAdapter(new ArrayList<Video>(),  this);
+        mVideoAdapter = new VideoAdapter(new ArrayList<>(),  this);
         rvVideoList.setAdapter(mVideoAdapter);
         rvVideoList.setNestedScrollingEnabled(false);
 
@@ -200,7 +198,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         LinearLayoutManager llmReviews
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         rvReviews.setLayoutManager(llmReviews);
-        mReviewAdapter = new ReviewAdapter(new ArrayList<Review>(), this);
+        mReviewAdapter = new ReviewAdapter(new ArrayList<>(), this);
         rvReviews.setAdapter(mReviewAdapter);
 
         // Fetch reviews only if savedInstanceState == null
@@ -218,41 +216,39 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
         MovieTVDbHelper pmDbHelper = new MovieTVDbHelper(this);
         mDb = pmDbHelper.getWritableDatabase();
 
-        mFavoriteButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (getIntent().hasExtra(EXTRA_MOVIE)) {
-                    if (mMovie.isFavorite()) {
-                        mMovie.setFavorite(false);
-                        mFavoriteButton.setText(R.string.favorite);
-                        if (removeFromFavorites() != 0)
-                            Toast.makeText(MovieDetailActivity.this, "This movie was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
-                    } else {
-                        mMovie.setFavorite(true);
-                        mFavoriteButton.setText(R.string.unfavorite);
-                        if (addToFavorites() != 0)
-                            Toast.makeText(MovieDetailActivity.this, "This movie was successfully added to your favorites.", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
-                    }
-                } else if (getIntent().hasExtra(EXTRA_TV)) {
-                    if (tTV.isFavorite()) {
-                        tTV.setFavorite(false);
-                        mFavoriteButton.setText(R.string.favorite);
-                        if (removeFromFavorites() != 0)
-                            Toast.makeText(MovieDetailActivity.this, "This TV show was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
-                        removeFromFavorites();
-                    } else {
-                        tTV.setFavorite(true);
-                        mFavoriteButton.setText(R.string.unfavorite);
-                        if (addToFavorites() != 0)
-                            Toast.makeText(MovieDetailActivity.this, "This TV show was successfully added to your favorites.", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
-                    }
+        mFavoriteButton.setOnClickListener(v -> {
+            if (getIntent().hasExtra(EXTRA_MOVIE)) {
+                if (mMovie.isFavorite()) {
+                    mMovie.setFavorite(false);
+                    mFavoriteButton.setText(R.string.favorite);
+                    if (removeFromFavorites() != 0)
+                        Toast.makeText(MovieDetailActivity.this, "This movie was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                } else {
+                    mMovie.setFavorite(true);
+                    mFavoriteButton.setText(R.string.unfavorite);
+                    if (addToFavorites() != 0)
+                        Toast.makeText(MovieDetailActivity.this, "This movie was successfully added to your favorites.", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MovieDetailActivity.this, "This movie was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
+                }
+            } else if (getIntent().hasExtra(EXTRA_TV)) {
+                if (tTV.isFavorite()) {
+                    tTV.setFavorite(false);
+                    mFavoriteButton.setText(R.string.favorite);
+                    if (removeFromFavorites() != 0)
+                        Toast.makeText(MovieDetailActivity.this, "This TV show was successfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully removed from your favorites.", Toast.LENGTH_LONG).show();
+                    removeFromFavorites();
+                } else {
+                    tTV.setFavorite(true);
+                    mFavoriteButton.setText(R.string.unfavorite);
+                    if (addToFavorites() != 0)
+                        Toast.makeText(MovieDetailActivity.this, "This TV show was successfully added to your favorites.", Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(MovieDetailActivity.this, "This TV show was unsuccessfully added to your favorites.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -273,12 +269,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private void fetchTrailers(long lMovieId) {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(request -> request.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);
@@ -312,12 +303,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     private void fetchReviews(long lMovieId) {
         RestAdapter raAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://api.themoviedb.org/3")
-                .setRequestInterceptor(new RequestInterceptor() {
-                    @Override
-                    public void intercept(RequestFacade request) {
-                        request.addEncodedQueryParam("api_key", getText(R.string.api_key).toString());
-                    }
-                })
+                .setRequestInterceptor(request -> request.addEncodedQueryParam("api_key", getText(R.string.api_key).toString()))
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
         MovieTVAPI mtaService = raAdapter.create(MovieTVAPI.class);

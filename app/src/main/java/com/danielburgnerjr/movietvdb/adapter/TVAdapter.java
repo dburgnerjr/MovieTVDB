@@ -34,14 +34,11 @@ public class TVAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup vgParent, final int nViewType) {
         View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
         final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
-        vView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View vV) {
-                int nPos = mvhHolder.getAdapterPosition();
-                Intent intI = new Intent(conContext, MovieDetailActivity.class);
-                intI.putExtra(MovieDetailActivity.EXTRA_TV, mTVList.get(nPos));
-                conContext.startActivity(intI);
-            }
+        vView.setOnClickListener(vV -> {
+            int nPos = mvhHolder.getAdapterPosition();
+            Intent intI = new Intent(conContext, MovieDetailActivity.class);
+            intI.putExtra(MovieDetailActivity.EXTRA_TV, mTVList.get(nPos));
+            conContext.startActivity(intI);
         });
         return mvhHolder;
     }
