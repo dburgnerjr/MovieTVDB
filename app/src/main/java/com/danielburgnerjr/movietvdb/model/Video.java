@@ -55,7 +55,7 @@ public class Video implements Parcelable {
         parcel.writeString(strSize);
     }
 
-    public class VideoResult {
+    public static class VideoResult {
         @SerializedName("results")
         private List<Video> videoList = new ArrayList<>();
 
