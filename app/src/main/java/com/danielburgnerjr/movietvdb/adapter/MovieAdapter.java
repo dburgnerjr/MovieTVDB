@@ -35,7 +35,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieViewHolder> {
         View vView = liInflater.inflate(R.layout.movie_list, vgParent, false);
         final MovieViewHolder mvhHolder = new MovieViewHolder(vView);
         vView.setOnClickListener(vV -> {
-            int nPos = mvhHolder.getAdapterPosition();
+            int nPos = mvhHolder.getAbsoluteAdapterPosition();
             Intent intI = new Intent(conContext, MovieDetailActivity.class);
             intI.putExtra(MovieDetailActivity.EXTRA_MOVIE, mMovieList.get(nPos));
             conContext.startActivity(intI);

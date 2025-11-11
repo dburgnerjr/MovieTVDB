@@ -66,7 +66,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoViewHolder> {
                 .config(Bitmap.Config.RGB_565)
                 .into(holder.ivThumbnailView);
 
-        holder.vView.setOnClickListener(v -> mCallbacks.watch(video, holder.getAdapterPosition()));
+        holder.vView.setOnClickListener(v -> mCallbacks.watch(video, holder.getAbsoluteAdapterPosition()));
     }
 
     @Override

@@ -46,30 +46,24 @@ public class MovieTVDBContentProvider extends ContentProvider {
 
         final SQLiteDatabase db = movieDbHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
-        Cursor retCursor;
+        Cursor retCursor = switch (match) {
+            case MOVIES -> db.query(MovieTVDBContract.MovieEntry.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    MovieTVDBContract.MovieEntry.COLUMN_TIMESTAMP);
+            case TVS -> db.query(MovieTVDBContract.TVEntry.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    MovieTVDBContract.TVEntry.COLUMN_TIMESTAMP);
+            default -> throw new UnsupportedOperationException("Unknown uri: " + uri);
+        };
 
-        switch (match) {
-            case MOVIES:
-                retCursor = db.query(MovieTVDBContract.MovieEntry.TABLE_NAME,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        MovieTVDBContract.MovieEntry.COLUMN_TIMESTAMP);
-                break;
-            case TVS:
-                retCursor = db.query(MovieTVDBContract.TVEntry.TABLE_NAME,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        MovieTVDBContract.TVEntry.COLUMN_TIMESTAMP);
-                break;
-            default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
         retCursor.setNotificationUri(context.getContentResolver(), uri);
 
         return retCursor;
@@ -134,20 +128,21 @@ public class MovieTVDBContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        switch (match) {
-            case MOVIE_ID:
+        deletedRecords = switch (match) {
+            case MOVIE_ID -> {
                 if (moviesDeleted != 0) {
                     context.getContentResolver().notifyChange(uri, null);
                 }
-                deletedRecords = moviesDeleted;
-                break;
-            case TV_ID:
+                yield moviesDeleted;
+            }
+            case TV_ID -> {
                 if (tvsDeleted != 0) {
                     context.getContentResolver().notifyChange(uri, null);
                 }
-                deletedRecords = tvsDeleted;
-                break;
-        }
+                yield tvsDeleted;
+            }
+            default -> deletedRecords;
+        };
         return deletedRecords;
     }
 

@@ -77,7 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity implements VideoAdapt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        MobileAds.initialize(this, String.valueOf(R.string.admob_app_id));
+        MobileAds.initialize(this);
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
